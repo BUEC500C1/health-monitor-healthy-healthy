@@ -7,9 +7,9 @@
 
 # Project Roles
 
-Alex: Health Indicator
-Chris: Error Handling
-Jacob: Alerts
-Justin: BP Module, Communication With Personal Device
-Noah: Pulse Module, Timer
-Varun: Blood Oxygen, AI Module
+* Alex: Health Indicator
+* Chris: Error Handling
+* Jacob: Alerts
+* Justin: BP Module, Communication With Personal Device
+* Noah: Pulse Module, Timer
+* Varun: Blood Oxygen, AI Module
