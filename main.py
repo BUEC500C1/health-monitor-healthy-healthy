@@ -18,6 +18,7 @@ def modify_bp(rate, bp, global_kill):
         
         sleep(1/rate)
 
+
 global_kill = Event()
 warning_event = Event()
 emergency_event = Event()
@@ -44,6 +45,7 @@ while (True):
             print("EMERGENCY")
 
     except KeyboardInterrupt:
+        #log_error("Keyboard interrupted monitor")
         global_kill.set()
         break
 
