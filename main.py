@@ -1,5 +1,9 @@
 from threading import Thread, Event
 from time import sleep
+import heart_rage
+import signal
+import globals
+
 #import Alerts
 
 #############################
@@ -27,20 +31,21 @@ alerts_rate = 1           # Rate of checking for alerts
 update_rate = 4           # Update rate of vitals values (Hz)
 blood_pressure = 120      # TODO: Write BP function/module (Justin)
 blood_oxy = 98            # TODO: Write blood oxygen function/module (Varun)
-pulse = 70                # TODO: Write heart rate function/module (Noah)
+                          # TODO: Write heart rate function/module (Noah)
+globals.initilize()     #initilizes all global variables for the threads to alter
 
 #  bp_t = Thread(target=bp_module, args=(blood_pressure, rate, ))
 #  boxy_t = Thread(target=boxy_module, args=(blood_oxy, rate, ))
-#  pulse_t = Thread(target=pulse_module, args=(pulse, rate, ))
+pulse_t = Thread(target=heart_rage.pulse_module, args=(update_rate, ))
 #  bp_t.start()
 #  boxy_t.start()
-#  pulse_t.start()
+pulse_t.start()
 
 # alerts = Alerts(warning_event, emergency_event)
 while (True):
     try:
         if (warning_event.is_set()):
-        print("WARNING!")
+            print("WARNING!")
         elif (emergency_event.is_set()):
             print("EMERGENCY")
 
@@ -53,4 +58,4 @@ while (True):
 
 # bp_t.join()
 # boxy_t.join()
-# pulse_t.join()
+pulse_t.join()
