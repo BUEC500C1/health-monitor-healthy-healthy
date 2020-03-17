@@ -1,5 +1,6 @@
 from threading import Thread, Event
 from time import sleep
+import heart_rage
 #import Alerts
 
 #############################
@@ -31,7 +32,7 @@ pulse = 70                # TODO: Write heart rate function/module (Noah)
 
 #  bp_t = Thread(target=bp_module, args=(blood_pressure, rate, ))
 #  boxy_t = Thread(target=boxy_module, args=(blood_oxy, rate, ))
-#  pulse_t = Thread(target=pulse_module, args=(pulse, rate, ))
+pulse_t = Thread(target=heart_rage.pulse_module, args=(pulse, update_rate, ))
 #  bp_t.start()
 #  boxy_t.start()
 #  pulse_t.start()
@@ -40,7 +41,7 @@ pulse = 70                # TODO: Write heart rate function/module (Noah)
 while (True):
     try:
         if (warning_event.is_set()):
-        print("WARNING!")
+            print("WARNING!")
         elif (emergency_event.is_set()):
             print("EMERGENCY")
 
