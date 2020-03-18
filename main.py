@@ -1,5 +1,7 @@
 from threading import Thread, Event
 from time import sleep
+import indicator
+from flask import Flask
 #import Alerts
 
 #############################
@@ -9,6 +11,9 @@ from time import sleep
 #
 ################################
 
+app = Flask(__name__)
+
+
 def modify_bp(rate, bp, global_kill):
     while True:
         # bp += some_random_number_thing TODO
@@ -17,6 +22,11 @@ def modify_bp(rate, bp, global_kill):
             break
         
         sleep(1/rate)
+
+@app.route('/', methods=['GET'])
+def home():
+    webString = "<h1>Health Monitor!</h1><p>Blood Pressure: " + str(blood_pressure) + "</p><p>Blood Oxygen: " + str(blood_oxy) + "</p><p>Pulse: "+ str(pulse) + "</p>"
+    return webString
 
 
 global_kill = Event()
@@ -29,18 +39,22 @@ blood_pressure = 120      # TODO: Write BP function/module (Justin)
 blood_oxy = 98            # TODO: Write blood oxygen function/module (Varun)
 pulse = 70                # TODO: Write heart rate function/module (Noah)
 
+app.run()
+
 #  bp_t = Thread(target=bp_module, args=(blood_pressure, rate, ))
 #  boxy_t = Thread(target=boxy_module, args=(blood_oxy, rate, ))
 #  pulse_t = Thread(target=pulse_module, args=(pulse, rate, ))
+#  indicator_t = Thread(target =indicator.healthmon, args(blood_pressure, pulse, blood_oxy,))
 #  bp_t.start()
 #  boxy_t.start()
 #  pulse_t.start()
+#  indicator_t.start()
 
 # alerts = Alerts(warning_event, emergency_event)
 while (True):
     try:
         if (warning_event.is_set()):
-        print("WARNING!")
+            print("WARNING!")
         elif (emergency_event.is_set()):
             print("EMERGENCY")
 
