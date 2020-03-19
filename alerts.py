@@ -39,7 +39,7 @@ class Alerts():
 
             sleep(int(1/self.rate))
 
-    def monitor_ox(self, bo)
+    def monitor_ox(self, bo):
         # Monitor the blood oxygen 
         # Input provided as an integer percentage
         while (True):
