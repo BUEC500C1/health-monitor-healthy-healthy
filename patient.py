@@ -3,7 +3,7 @@ import queue
 import random
 from time import sleep
 
-class Patient(Object):
+class Patient():
     '''
     A class that mimics a patient's vitals, and pushes blood pressure, blood
     oxygen, and pulse data to the queues that are provided as arguments
@@ -38,12 +38,6 @@ class Patient(Object):
         pulse_thread.start()
         #bp_thread.start()
         #bo_thread.start()
-
-        while not self.end:         #Temporary, read and print the vitals to std out every second
-            p = self.pulse_q.get()
-            print("Pulse: ", p)
-            sleep(1)
-        pulse_thread.join()
         
     def pulse_gen(self, q):
         '''Generate a healthy pulse, that varies uniformly around initial value'''
@@ -56,6 +50,7 @@ class Patient(Object):
 
     def bp_gen(self, q): # TODO, write for a healthy patient as the default for the parent class
         return (120,8)
+        
     def bo_gen(self, q): # TODO, write for a healthy patient as the default for the parent class
         return 98
 
@@ -63,9 +58,9 @@ class Patient(Object):
         self.end = 1
 
 
-class UnhealthyPatient(Patient):
-    def __init__(self, update_rate, pulse_q, bp_q, bo_q)):
-        super(UnhealthyPatient, self).__init__(update_rate, pulse_q, bp_q, bo_q))
+class UnhealthyPatient (Patient):
+    def __init__(self, update_rate, pulse_q, bp_q, bo_q):
+        super(UnhealthyPatient, self).__init__(update_rate, pulse_q, bp_q, bo_q)
         
         #for init, everything else is the same as the parent except the starting vitals
         self.prev_pulse = 100 #initial pulse is high
