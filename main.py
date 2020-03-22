@@ -31,18 +31,24 @@ def home():
     print("Data Starting")
     return render_template('main.html')
 
+
+pulse_q = Queue()
+bp_q = Queue()
+bo_q = Queue()
+patient = Patient(1, pulse_q, bp_q, bo_q)
+
+@socketio.on('stop')
+def startwebApp(fakeData):
+    patient.end_vitals()
+
 @socketio.on('create')
 def startwebApp(fakeData):
-    pulse_q = Queue()
-    bp_q = Queue()
-    bo_q = Queue()
+    
 
     #initialize a healthy patient, with vitals generating every second
-    patient = Patient(1, pulse_q, bp_q, bo_q)
 
     #start the vitals
     patient.start_vitals()
-    print("Vitals Started")
      #only pulse has a function written
     bp = 0
     bo = 0
@@ -53,6 +59,7 @@ def startwebApp(fakeData):
         # bp = bp_q.get()
         # bo = bo_q.get()
         emit('data', {'bp': bp, 'bo': bo, 'pulse': pulse})
+        print(pulse)
         sleep(1)
         socketio.sleep(0)
         count -= 1
