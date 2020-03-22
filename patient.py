@@ -61,6 +61,7 @@ class Patient():
             q.put(bo)
             self.prev_bo = bo
             sleep(int(1/self.rate))
+        return
 
     def end_vitals(self):
         self.end = 1
