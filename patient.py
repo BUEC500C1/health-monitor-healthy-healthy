@@ -92,8 +92,15 @@ class UnhealthyPatient (Patient):
             sleep(int(1/self.rate))
             return
          
-        def bp_gen(self, q):
-            return (130, 90) #TODO: override parent generator, write for an unhealthy patient
-         
-        def bo_gen(self, q):
-           return 95 #TODO: override parent generator, write for an unhealthy patient
+    def bp_gen(self, q):
+        return (130, 90) #TODO: override parent generator, write for an unhealthy patient
+        
+    def bo_gen(self, q):
+        self.prev_bo = random.randint(85, 96)
+        while not self.end:
+            randVal = self.prev_bo + random.randint(-2, 2)
+            if (randVal > 100):
+                randVal = 99
+            q.put(bo)
+            self.prev_bo = bo
+            sleep(int(1/self.rate))
