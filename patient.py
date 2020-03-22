@@ -41,8 +41,9 @@ class Patient():
         
     def pulse_gen(self, q):
         '''Generate a healthy pulse, that varies uniformly around initial value'''
+        self.prev_pulse = random.randint(60, 80)
         while not self.end:
-            pulse = self.prev_pulse + random.uniform(-1, 1)
+            pulse = round(self.prev_pulse + random.uniform(-1, 1), 1)
             q.put(pulse)
             self.prev_pulse = pulse
             sleep(int(1/self.rate))
@@ -57,7 +58,7 @@ class Patient():
     def end_vitals(self):
         self.end = 1
 
-
+        
 class UnhealthyPatient (Patient):
     def __init__(self, update_rate, pulse_q, bp_q, bo_q):
         super(UnhealthyPatient, self).__init__(update_rate, pulse_q, bp_q, bo_q)
@@ -66,12 +67,26 @@ class UnhealthyPatient (Patient):
         self.prev_pulse = 100 #initial pulse is high
         #self.prev_bp = (130, 90) #initial blood pressure is high
         #self.prev_bo = 95 #initial blood oxygen is lower
-
+        
     def pulse_gen(self, q):
-        return 100 #TODO: override parent generator, write for an unhealthy patient
-    
-    def bp_gen(self, q):
-        return (130, 90) #TODO: override parent generator, write for an unhealthy patient
+    '''Generate a healthy pulse, that varies uniformly around initial value'''
+        self.prev_pulse = random.randint(60, 80)
+        bad_value = 0
 
-    def bo_gen(self, q):
-        return 95 #TODO: override parent generator, write for an unhealthy patient
+        while not self.end:
+            
+            bad_value = random.randint(0, 6)
+            if (bad_value == 5):
+                pulse = random.randint(40, 59)
+            else:
+                pulse = round(self.prev_pulse + random.uniform(-2, 2), 1)
+            q.put(pulse)
+            self.prev_pulse = pulse
+            sleep(int(1/self.rate))
+            return
+         
+        def bp_gen(self, q):
+            return (130, 90) #TODO: override parent generator, write for an unhealthy patient
+         
+        def bo_gen(self, q):
+           return 95 #TODO: override parent generator, write for an unhealthy patient
