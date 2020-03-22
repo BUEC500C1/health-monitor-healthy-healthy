@@ -14,6 +14,8 @@ class Patient():
     '''
 
     def __init__(self, update_rate, pulse_q, bp_q, bo_q):
+    while True:
+    try:
         self.rate = update_rate                  #Defines the rate of vitals data generation
 
         # This parent class defaults to a healthy patient, see gen functions for healthy behavior
@@ -28,8 +30,14 @@ class Patient():
 
         # Kill switch
         self.end = 0
+    except KeyboardInterrupt:
+        print("System Failed, reboot")
+        global_kill.set()
+        break
 
     def start_vitals(self):
+    while True:
+    try:
         '''Launch the vitals generators in multiple threads'''
         pulse_thread = Thread(target=self.pulse_gen, args=(self.pulse_q,))
         #bp_thread = Thread(target=self.bp, args=(self.bp_q,))
@@ -38,8 +46,14 @@ class Patient():
         pulse_thread.start()
         #bp_thread.start()
         #bo_thread.start()
+    except KeyboardInterrupt:
+        print("System Failed, reboot")
+        global_kill.set()
+        break
         
     def pulse_gen(self, q):
+    while True:
+    try:
         '''Generate a healthy pulse, that varies uniformly around initial value'''
         self.prev_pulse = random.randint(60, 80)
         while not self.end:
@@ -48,11 +62,23 @@ class Patient():
             self.prev_pulse = pulse
             sleep(int(1/self.rate))
         return
+    except KeyboardInterrupt:
+        print("System Failed, reboot")
+        global_kill.set()
+        break
 
     def bp_gen(self, q): # TODO, write for a healthy patient as the default for the parent class
+    while True:
+    try:
         return (120,8)
+    except KeyboardInterrupt:
+        print("System Failed, reboot")
+        global_kill.set()
+        break
         
     def bo_gen(self, q): # TODO, write for a healthy patient as the default for the parent class
+    while True:
+    try:
         self.prev_bo = random.randint(95, 99)
         while not self.end:
             randVal = self.prev_bo + random.randint(-2, 2)
@@ -62,21 +88,39 @@ class Patient():
             self.prev_bo = bo
             sleep(int(1/self.rate))
         return
+    except KeyboardInterrupt:
+        print("System Failed, reboot")
+        global_kill.set()
+        break
 
     def end_vitals(self):
+    while True:
+    try:
         self.end = 1
+    except KeyboardInterrupt:
+        print("System Failed, reboot")
+        global_kill.set()
+        break
 
         
 class UnhealthyPatient (Patient):
     def __init__(self, update_rate, pulse_q, bp_q, bo_q):
+    while True:
+    try:
         super(UnhealthyPatient, self).__init__(update_rate, pulse_q, bp_q, bo_q)
         
         #for init, everything else is the same as the parent except the starting vitals
         self.prev_pulse = 100 #initial pulse is high
         #self.prev_bp = (130, 90) #initial blood pressure is high
         #self.prev_bo = 95 #initial blood oxygen is lower
+    except KeyboardInterrupt:
+        print("System Failed, reboot")
+        global_kill.set()
+        break
         
     def pulse_gen(self, q):
+    while True:
+    try:
     '''Generate a healthy pulse, that varies uniformly around initial value'''
         self.prev_pulse = random.randint(60, 80)
         bad_value = 0
@@ -92,11 +136,23 @@ class UnhealthyPatient (Patient):
             self.prev_pulse = pulse
             sleep(int(1/self.rate))
             return
+    except KeyboardInterrupt:
+        print("System Failed, reboot")
+        global_kill.set()
+        break
          
     def bp_gen(self, q):
+    while True:
+    try:
         return (130, 90) #TODO: override parent generator, write for an unhealthy patient
+    except KeyboardInterrupt:
+        print("System Failed, reboot")
+        global_kill.set()
+        break
         
     def bo_gen(self, q):
+    while True:
+    try:
         self.prev_bo = random.randint(85, 96)
         while not self.end:
             randVal = self.prev_bo + random.randint(-2, 2)
@@ -106,3 +162,7 @@ class UnhealthyPatient (Patient):
             self.prev_bo = bo
             sleep(int(1/self.rate))
             return
+    except KeyboardInterrupt:
+        print("System Failed, reboot")
+        global_kill.set()
+        break

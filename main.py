@@ -28,11 +28,20 @@ socketio = SocketIO(app)
 
 @app.route('/', methods=['GET'])
 def home():
+while True:
+try:
     print("Data Starting")
     return render_template('main.html')
 
 @socketio.on('create')
+except KeyboardInterrupt:
+    print("System Failed, reboot")
+    global_kill.set()
+    break
 def startwebApp(fakeData):
+while True:
+try:
+
     pulse_q = Queue()
     bp_q = Queue()
     bo_q = Queue()
@@ -72,7 +81,10 @@ def startwebApp(fakeData):
     #stop generating vitals
     patient.end_vitals()
     sys.exit(1)
-        
+except KeyboardInterrupt:
+    print("System Failed, reboot")
+    global_kill.set()
+    break
 
 if __name__ == "__main__":
     socketio.run(app)
