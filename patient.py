@@ -19,7 +19,7 @@ class Patient():
         # This parent class defaults to a healthy patient, see gen functions for healthy behavior
         self.prev_pulse = 70
         #self.prev_bp = (120, 80) #initial blood pressure is healthy
-        #self.prev_bo = 98 #initial blood oxygen is healthy
+        self.prev_bo = 98 #initial blood oxygen is healthy
 
         # Load vitals data buffers
         self.pulse_q = pulse_q
@@ -53,7 +53,14 @@ class Patient():
         return (120,8)
         
     def bo_gen(self, q): # TODO, write for a healthy patient as the default for the parent class
-        return 98
+        self.prev_bo = random.randint(95, 99)
+        while not self.end:
+            randVal = self.prev_bo + random.randint(-2, 2)
+            if (randVal > 100):
+                randVal = 99
+            q.put(bo)
+            self.prev_bo = bo
+            sleep(int(1/self.rate))
 
     def end_vitals(self):
         self.end = 1
