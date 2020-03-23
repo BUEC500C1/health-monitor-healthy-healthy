@@ -35,13 +35,12 @@ def home():
         print("System Failed, reboot")
         global_kill.set()
 
-
-pulse_q = 0 #Queue()
-bp_q = 0 #Queue()
-bo_q = 0 #Queue()
+pulse_q = Queue()
+bp_q = Queue()
+bo_q = Queue()
 
 #initialize a healthy patient, with vitals generating every second
-patient = 0 #Patient(1, pulse_q, bp_q, bo_q)
+patient = Patient(1, pulse_q, bp_q, bo_q)
 
 @socketio.on('stop')
 def stop(fakeData):
@@ -56,13 +55,7 @@ def startwebApp(fakeData):
     try:
         #start the vitals
         print("starting vitals")
-        global pulse_q, bp_q, bo_q, patient
-        pulse_q = Queue()
-        bp_q = Queue()
-        bo_q = Queue()
-
-        #initialize a healthy patient, with vitals generating every second
-        patient = Patient(1, pulse_q, bp_q, bo_q)
+        
         patient.start_vitals()
         #only pulse has a function written
         bp = 0
