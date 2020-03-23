@@ -36,29 +36,39 @@ def home():
         global_kill.set()
 
 
-pulse_q = Queue()
-bp_q = Queue()
-bo_q = Queue()
+pulse_q = 0 #Queue()
+bp_q = 0 #Queue()
+bo_q = 0 #Queue()
 
 #initialize a healthy patient, with vitals generating every second
-patient = Patient(1, pulse_q, bp_q, bo_q)
+patient = 0 #Patient(1, pulse_q, bp_q, bo_q)
 
 @socketio.on('stop')
-def startwebApp(fakeData):
+def stop(fakeData):
+    global patient
     patient.end_vitals()
+    patient = 0
+    print("end vitals")
 
 @socketio.on('create')
 def startwebApp(fakeData):
-
+    print("got start messages")
     try:
         #start the vitals
+        print("starting vitals")
+        global pulse_q, bp_q, bo_q, patient
+        pulse_q = Queue()
+        bp_q = Queue()
+        bo_q = Queue()
+
+        #initialize a healthy patient, with vitals generating every second
+        patient = Patient(1, pulse_q, bp_q, bo_q)
         patient.start_vitals()
-         #only pulse has a function written
+        #only pulse has a function written
         bp = 0
         bo = 0
-        #get 10 vitals readings
-        count = 10
-        while count > 0:
+
+        while True:
             pulse = pulse_q.get()
             # bp = bp_q.get()
             # bo = bo_q.get()
@@ -66,7 +76,6 @@ def startwebApp(fakeData):
             print(pulse)
             sleep(1)
             socketio.sleep(0)
-            count -= 1
 
         #instead of the above printing, we'll have:
         # initialize the GUI class
@@ -81,7 +90,7 @@ def startwebApp(fakeData):
 
 
         #stop generating vitals
-        patient.end_vitals()
+#        patient.end_vitals()
  #       sys.exit(1)
     except KeyboardInterrupt:
         print("System Failed, reboot")

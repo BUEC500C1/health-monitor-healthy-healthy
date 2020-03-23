@@ -14,24 +14,32 @@
   <p id = "pulse"> </p>
 
 <script>
-bp = document.getElementById("bp")
-bo = document.getElementById("bo")
-pulse = document.getElementById("pulse")
+var bp = document.getElementById("bp")
+var bo = document.getElementById("bo")
+var pulse = document.getElementById("pulse")
 
+var go = 0
 var socket = io.connect('http://' + document.domain + ':' + location.port);
   socket.on('data', function(msg) {
-    bp.innerHTML = "Blood Pressure: " + msg.bp;
-    bo.innerHTML = "Blood Oxygen: " + msg.bo;
-    pulse.innerHTML = "Pulse: " + msg.pulse;
-    console.log(msg.pulse)
+    if (go == 1){
+      bp.innerHTML = "Blood Pressure: " + msg.bp;
+      bo.innerHTML = "Blood Oxygen: " + msg.bo;
+      pulse.innerHTML = "Pulse: " + msg.pulse;
+      console.log(msg.pulse)
+    }
 
   })
+
   function start(){
+    go = 1
     socket.emit('create', 1)
+    console.log('start')
   }
   function stop(){
+    go = 0
     socket.emit('stop', 1)
-    socket.close()
+    console.log('stop')
+//    socket.close()
   }
 
 </script>
