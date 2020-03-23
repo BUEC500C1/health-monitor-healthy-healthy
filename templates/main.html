@@ -1,12 +1,13 @@
 <!doctype html>
 <html>
-<head>
+<head align="center">
 <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
   <h1>Health Monitor</h1>
 </head>
 
-<body>
-<button onclick="start()"> Start </button>
+<body  align="center">
+  <button onclick="start()"> Start </button>
+  <button onclick="stop()"> Stop </button>
 
   <p id = "bp"> </p>
   <p id = "bo"> </p>
@@ -17,21 +18,20 @@ bp = document.getElementById("bp")
 bo = document.getElementById("bo")
 pulse = document.getElementById("pulse")
 
-function sleep(delay) {
-    var start = new Date().getTime();
-    while (new Date().getTime() < start + delay);
-}
 var socket = io.connect('http://' + document.domain + ':' + location.port);
   socket.on('data', function(msg) {
     bp.innerHTML = "Blood Pressure: " + msg.bp;
     bo.innerHTML = "Blood Oxygen: " + msg.bo;
     pulse.innerHTML = "Pulse: " + msg.pulse;
     console.log(msg.pulse)
-    //sleep(100)
 
   })
   function start(){
     socket.emit('create', 1)
+  }
+  function stop(){
+    socket.emit('stop', 1)
+    socket.close()
   }
 
 </script>

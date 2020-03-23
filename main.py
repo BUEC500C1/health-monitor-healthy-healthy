@@ -28,63 +28,65 @@ socketio = SocketIO(app)
 
 @app.route('/', methods=['GET'])
 def home():
-while True:
-try:
-    print("Data Starting")
-    return render_template('main.html')
+    try:
+        print("Data Starting")
+        return render_template('main.html')
+    except KeyboardInterrupt:
+        print("System Failed, reboot")
+        global_kill.set()
+
+
+pulse_q = Queue()
+bp_q = Queue()
+bo_q = Queue()
+
+#initialize a healthy patient, with vitals generating every second
+patient = Patient(1, pulse_q, bp_q, bo_q)
+
+@socketio.on('stop')
+def startwebApp(fakeData):
+    patient.end_vitals()
 
 @socketio.on('create')
-except KeyboardInterrupt:
-    print("System Failed, reboot")
-    global_kill.set()
-    break
 def startwebApp(fakeData):
-while True:
-try:
 
-    pulse_q = Queue()
-    bp_q = Queue()
-    bo_q = Queue()
+    try:
+        #start the vitals
+        patient.start_vitals()
+         #only pulse has a function written
+        bp = 0
+        bo = 0
+        #get 10 vitals readings
+        count = 10
+        while count > 0:
+            pulse = pulse_q.get()
+            # bp = bp_q.get()
+            # bo = bo_q.get()
+            emit('data', {'bp': bp, 'bo': bo, 'pulse': pulse})
+            print(pulse)
+            sleep(1)
+            socketio.sleep(0)
+            count -= 1
 
-    #initialize a healthy patient, with vitals generating every second
-    patient = Patient(1, pulse_q, bp_q, bo_q)
+        #instead of the above printing, we'll have:
+        # initialize the GUI class
+        # health_monitor = HealthMonitor(pulse_q, bp_q, bo_q)
+        # 
+        # #Launch the GUI along with the alerts system in its own thread
+        # health_monitor.launch()
+        # From there, database stuff etc?
 
-    #start the vitals
-    patient.start_vitals()
-    print("Vitals Started")
-     #only pulse has a function written
-    bp = 0
-    bo = 0
-    #get 10 vitals readings
-    count = 10
-    while count > 0:
-        pulse = pulse_q.get()
-        # bp = bp_q.get()
-        # bo = bo_q.get()
-        emit('data', {'bp': bp, 'bo': bo, 'pulse': pulse})
-        sleep(1)
-        socketio.sleep(0)
-        count -= 1
-
-    #instead of the above printing, we'll have:
-    # initialize the GUI class
-    # health_monitor = HealthMonitor(pulse_q, bp_q, bo_q)
-    # 
-    # #Launch the GUI along with the alerts system in its own thread
-    # health_monitor.launch()
-    # From there, database stuff etc?
-
-    # close the GUI after a certain time or from a button press in the GUI 
-    # health_monitor.stop()
+        # close the GUI after a certain time or from a button press in the GUI 
+        # health_monitor.stop()
 
 
-    #stop generating vitals
-    patient.end_vitals()
-    sys.exit(1)
-except KeyboardInterrupt:
-    print("System Failed, reboot")
-    global_kill.set()
-    break
+        #stop generating vitals
+        patient.end_vitals()
+ #       sys.exit(1)
+    except KeyboardInterrupt:
+        print("System Failed, reboot")
+        patient.end_vitals()
+        global_kill.set()
 
 if __name__ == "__main__":
     socketio.run(app)
