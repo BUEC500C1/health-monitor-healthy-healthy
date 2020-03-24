@@ -32,7 +32,6 @@ def home():
         return render_template('main.html')
     except KeyboardInterrupt:
         print("System Failed, reboot")
-        global_kill.set()
 
 pulse_q = Queue()
 bp_q = Queue()
