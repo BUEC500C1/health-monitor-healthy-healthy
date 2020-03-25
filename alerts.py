@@ -9,8 +9,38 @@ def poll_vitals(pulse, bp, bo):
     Check the values of the vitals of the patient.
     Return a string indicating the alert, else ""
     '''
-    return ""
+    alert_string = ""
+    only_alert = True   #for formatting 
+    if (pulse > 120):
+        only_alert = False 
+        alert_string += "Pulse is abnormally high"
     
+    if (pulse < 50):
+        if (only_alert):
+            alert_string += "Pulse is abnormally low"
+            only_alert = False
+        else:
+            alert_string += "; Pulse is abnormally low"
+    
+    if (bp[0] > 160 or bp[1] > 90):
+        if (only_alert):
+            alert_string += "Blood pressure is abnormally high"
+            only_alert = False
+        else: 
+            alert_string += "; Blood pressure is abnormally high"
+
+    if (bp[0] < 90 or bp[1] < 70):
+        if (only_alert):
+            alert_string += "Blood pressure is abnormally low"
+        else: 
+            alert_string += "; Blood pressure is abnormally low"
+
+    if (bo < 94):
+        if (only_alert):
+            alert_string += "Blood oxygen is abnormally low"
+        else:
+            alert_string += "; Blood oxygen is abnormally low"
+    return alert_string
 
 def sendemail(alertMsg, subject):
     msg = EmailMessage()
