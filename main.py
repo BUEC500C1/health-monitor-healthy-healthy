@@ -8,7 +8,7 @@ from flask_socketio import SocketIO, emit
 from patient import Patient, UnhealthyPatient
 import sys
 
-#############################
+################################
 #
 # Main wrapper
 #
@@ -25,7 +25,6 @@ import sys
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-
 @app.route('/', methods=['GET'])
 def home():
     try:
@@ -33,7 +32,6 @@ def home():
         return render_template('main.html')
     except KeyboardInterrupt:
         print("System Failed, reboot")
-        global_kill.set()
 
 pulse_q = Queue()
 bp_q = Queue()
@@ -46,7 +44,6 @@ patient = Patient(1, pulse_q, bp_q, bo_q)
 def stop(fakeData):
     global patient
     patient.end_vitals()
-    patient = 0
     print("end vitals")
 
 @socketio.on('create')
@@ -54,41 +51,38 @@ def startwebApp(fakeData):
     print("got start messages")
     try:
         #start the vitals
-        print("starting vitals")
-        
+        print("Starting vitals")
         patient.start_vitals()
-        #only pulse has a function written
-        bp = 0
-        bo = 0
 
         while True:
             pulse = pulse_q.get()
-            # bp = bp_q.get()
-            # bo = bo_q.get()
-            emit('data', {'bp': bp, 'bo': bo, 'pulse': pulse})
+            bp = bp_q.get()
+            bo = bo_q.get()
+
+            # alerts
+
+            emit('data', {'bp': "{0} / {1}".format(bp[0], bp[1]), 'bo': bo, 'pulse': pulse})
             print(pulse)
             sleep(1)
             socketio.sleep(0)
 
         #instead of the above printing, we'll have:
         # initialize the GUI class
-        # health_monitor = HealthMonitor(pulse_q, bp_q, bo_q)
-        # 
         # #Launch the GUI along with the alerts system in its own thread
         # health_monitor.launch()
-        # From there, database stuff etc?
 
+        # From there, database stuff etc?
         # close the GUI after a certain time or from a button press in the GUI 
         # health_monitor.stop()
 
+        # stop generating vitals
+        # patient.end_vitals()
+        # sys.exit(1)
 
-        #stop generating vitals
-#        patient.end_vitals()
- #       sys.exit(1)
     except KeyboardInterrupt:
         print("System Failed, reboot")
         patient.end_vitals()
-        global_kill.set()
+        return
 
 if __name__ == "__main__":
     socketio.run(app)
