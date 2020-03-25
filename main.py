@@ -1,6 +1,5 @@
 from threading import Thread, Event
 from time import sleep
-import indicator
 from flask import Flask, render_template
 #import Alerts
 from queue import Queue
@@ -60,6 +59,9 @@ def startwebApp(fakeData):
             bo = bo_q.get()
 
             # alerts
+
+            #if alert happens =>
+            # emit('alert',{'alert': 1 }
 
             emit('data', {'bp': "{0} / {1}".format(bp[0], bp[1]), 'bo': bo, 'pulse': pulse})
             print(pulse)
