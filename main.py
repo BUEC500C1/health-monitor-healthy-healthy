@@ -1,7 +1,7 @@
 from threading import Thread, Event
 from time import sleep
 from flask import Flask, render_template
-#import Alerts
+import alerts
 from queue import Queue
 from flask_socketio import SocketIO, emit
 from patient import Patient, UnhealthyPatient
@@ -58,10 +58,11 @@ def startwebApp(fakeData):
             bp = bp_q.get()
             bo = bo_q.get()
 
-            # alerts
+            a = alerts.poll_vitals(pulse, bp, bo)
 
-            #if alert happens =>
-            # emit('alert',{'alert': 1 }
+            if a != "":
+                #send alert to the web app
+                emit('alert',{'alert': a })
 
             emit('data', {'bp': "{0} / {1}".format(bp[0], bp[1]), 'bo': bo, 'pulse': pulse})
             print(pulse)
