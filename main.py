@@ -47,7 +47,6 @@ def stop(fakeData):
 
 @socketio.on('create')
 def startwebApp(fakeData):
-    print("got start messages")
     try:
         #start the vitals
         print("Starting vitals")
@@ -59,28 +58,13 @@ def startwebApp(fakeData):
             bo = bo_q.get()
 
             a = alerts.poll_vitals(pulse, bp, bo)
+            emit('alert',{'alert': a }) #sends alert to web app
 
-            if a != "":
-                #send alert to the web app
-                emit('alert',{'alert': a })
+            emit('data', {'bp': "{0} / {1}".format(bp[0], bp[1]), 'bo': bo, 'pulse': pulse}) #sends data to web app to display
 
-            emit('data', {'bp': "{0} / {1}".format(bp[0], bp[1]), 'bo': bo, 'pulse': pulse})
-            print(pulse)
             sleep(1)
             socketio.sleep(0)
 
-        #instead of the above printing, we'll have:
-        # initialize the GUI class
-        # #Launch the GUI along with the alerts system in its own thread
-        # health_monitor.launch()
-
-        # From there, database stuff etc?
-        # close the GUI after a certain time or from a button press in the GUI 
-        # health_monitor.stop()
-
-        # stop generating vitals
-        # patient.end_vitals()
-        # sys.exit(1)
 
     except KeyboardInterrupt:
         print("System Failed, reboot")

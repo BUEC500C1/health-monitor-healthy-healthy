@@ -12,6 +12,8 @@
   <p id = "bp"> </p>
   <p id = "bo"> </p>
   <p id = "pulse"> </p>
+  <br>
+  <p id ="alert" style="color:red;"></p>
 
 <script>
 var bp = document.getElementById("bp")
@@ -31,8 +33,11 @@ var socket = io.connect('http://' + document.domain + ':' + location.port);
   })
 
   socket.on('alert', function(msg) {
+    var alert = document.getElementById("alert")
+    alert.innerHTML = msg.alert
 
-    window.alert("ALERT: " + msg.alert);
+
+//    window.alert("ALERT: " + msg.alert);
 
   })
 
