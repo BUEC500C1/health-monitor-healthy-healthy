@@ -60,7 +60,7 @@ def startwebApp(fakeData):
             a = alerts.poll_vitals(pulse, bp, bo)
             emit('alert',{'alert': a }) #sends alert to web app
 
-            emit('data', {'bp': "{0} / {1}".format(bp[0], bp[1]), 'bo': bo, 'pulse': pulse}) #sends data to web app to display
+            emit('data', {'bp0': bp[0], 'bp1': bp[1], 'bo': bo, 'pulse': pulse}) #sends data to web app to display
 
             sleep(1)
             socketio.sleep(0)

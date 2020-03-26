@@ -2,45 +2,34 @@
 <html>
 <head align="center">
 <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
   <h1>Health Monitor</h1>
 </head>
 
-<body  align="center">
+<body align="center">
   <button onclick="start()"> Start </button>
   <button onclick="stop()"> End </button>
-
-  <p id = "bp"> </p>
-  <p id = "bo"> </p>
-  <p id = "pulse"> </p>
+  <p id = "bpSys" style="color:#7F6084"> </p>
+  <p id="bpDia" style="color:#009900"></p>
+  <p id = "bo" style="color:#369EAD"> </p>
+  <p id = "pulse" style="color:#C24642"> </p>
   <br>
-  <p id ="alert" style="color:red;"></p>
+
+  <p id ="alert" style="color:red;"></p> <br><br>
+
+<div id="chartContainer" style="height: 550px; width: 100%;"></div>
 
 <script>
-var bp = document.getElementById("bp")
-var bo = document.getElementById("bo")
-var pulse = document.getElementById("pulse")
 
 var go = 0
 var socket = io.connect('http://' + document.domain + ':' + location.port);
-  socket.on('data', function(msg) {
-    if (go == 1){
-      bp.innerHTML = "Blood Pressure: " + msg.bp;
-      bo.innerHTML = "Blood Oxygen: " + msg.bo;
-      pulse.innerHTML = "Pulse: " + msg.pulse;
-      console.log(msg.pulse)
-    }
-
-  })
 
   socket.on('alert', function(msg) {
     var alert = document.getElementById("alert")
     alert.innerHTML = msg.alert
 
-
-//    window.alert("ALERT: " + msg.alert);
-
   })
-
 
   function start(){
     go = 1
@@ -53,7 +42,162 @@ var socket = io.connect('http://' + document.domain + ':' + location.port);
     console.log('stop')
 //    socket.close()
   }
+var time = new Date; //gets current time
+var dataPoints1Sys = []; //bpSys
+var dataPoints1Dia = []; //bpDia
 
+var dataPoints2 = []; //bo
+var dataPoints3 = []; //pulse
+
+var bpSys = document.getElementById("bpSys")
+var bpDia = document.getElementById("bpDia")
+var bo = document.getElementById("bo")
+var pulse = document.getElementById("pulse")
+
+socket.on('data', function(msg) {
+      if (go == 1){
+
+          bpSys.innerHTML = "Systolic Blood Pressure: " + msg.bp0;
+          bpDia.innerHTML = "Diastolic Blood Pressure: " + msg.bp1;
+          bo.innerHTML = "Blood Oxygen: " + msg.bo;
+          pulse.innerHTML = "Pulse: " + msg.pulse;
+          time.setTime(time.getTime()+ updateInterval);
+      // pushing the new values
+          dataPoints1Sys.push({  //pushing our values into the arrays
+            x: time.getTime(),
+            y: parseFloat(msg.bp0) //bp
+          });
+          dataPoints1Dia.push({  //pushing our values into the arrays
+            x: time.getTime(),
+            y: parseFloat(msg.bp1) //bp
+          });
+          dataPoints2.push({
+            x:time.getTime(),
+            y: parseFloat(msg.bo) //bo
+          });
+          dataPoints3.push({
+            x:time.getTime(),
+            y: parseInt(msg.pulse)
+          });
+      }
+})
+
+  var chart = new CanvasJS.Chart("chartContainer", { //our chart !!
+  title:{
+    text: "Monitoring Data"
+  },
+  axisX:{
+    title: "Updates every second"
+  },
+  axisY:[ {
+    title: "Pulse",
+    lineColor: "#C24642",   //we set all the sensors to different colors so it's more readable
+    tickColor: "#C24642",
+    labelFontColor: "#C24642",
+    titleFontColor: "#C24642",
+    suffix: "beats/min"
+  },
+  {
+    title: "Blood Oxygen",
+    lineColor: "#369EAD",
+    tickColor: "#369EAD",
+    includeZero: false,
+    labelFontColor: "#369EAD",
+    titleFontColor: "#369EAD",
+    suffix: "%"
+  }],
+  axisY2: [{
+    title: "Systolic Blood Pressure",
+    lineColor: "#7F6084",
+    tickColor: "#7F6084",
+    includeZero: false,
+    labelFontColor: "#7F6084",
+    titleFontColor: "#7F6084",
+    suffix: "mmHg"
+  },
+  {
+    title: "Diastolic Blood Pressure",
+    lineColor: "#009900",
+    tickColor: "#009900",
+    includeZero: false,
+    labelFontColor: "#009900",
+    titleFontColor: "#009900",
+    suffix: "mmHg"
+  }],
+  toolTip: {
+    shared: true
+  },
+  legend: {
+    cursor: "pointer",
+    itemclick: toggleDataSeries
+  },
+  data: [ {
+    type: "line",
+    xValueType: "dateTime",
+    xValueFormatString: "hh:mm:ss TT",
+    name: "Pulse",
+    color: "#C24642",
+    showInLegend: true,
+    axisYIndex:0,
+    dataPoints: dataPoints3
+    
+  },
+  {
+    type: "line",
+    xValueType: "dateTime",
+    xValueFormatString: "hh:mm:ss TT",
+    name: "Blood Oxygen",
+    axisYIndex: 1,
+    color: "#369EAD",
+    showInLegend: true,
+    dataPoints: dataPoints2
+    
+  },
+  {
+    type: "line",
+    xValueType: "dateTime",
+    xValueFormatString: "hh:mm:ss TT",
+    name: "Systolic Blood Pressure",
+    color: "#7F6084",
+    axisYType: "secondary",
+    axisYIndex: 0,
+    showInLegend: true,
+    dataPoints: dataPoints1Sys
+    
+  },
+    {
+    type: "line",
+    xValueType: "dateTime",
+    xValueFormatString: "hh:mm:ss TT",
+    name: "Diastolic Blood Pressure",
+    color: "#009900",
+    axisYIndex: 1,
+    axisYType: "secondary",
+    showInLegend: true,
+    dataPoints: dataPoints1Dia
+    
+  }]
+});
+  chart.render()
+
+    function toggleDataSeries(e) {
+      if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+        e.dataSeries.visible = false;
+      }
+      else {
+        e.dataSeries.visible = true;
+      }
+      chart.render();
+    }
+
+    var updateInterval = 500; //the update interval checks to see if any changes happened every second to minimize delays when you refresh
+      //less than a second had some issues and so we found 1 second to be the most consistent
+function updateChart(){
+  chart.render()  //just needs to render the chart
+}
+
+updateChart() 
+setInterval(function(){updateChart()}, updateInterval);
 </script>
 
 </body>
