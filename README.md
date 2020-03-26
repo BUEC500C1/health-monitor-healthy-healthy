@@ -2,7 +2,7 @@
 
 # Project Architecture
 <p align="center">
-<img src="./updated_architecture.JPG" width="80%" />
+<img src="./updated_architecture.jpg" width="80%" />
 </p>
 
 # Project Roles
