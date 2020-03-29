@@ -146,6 +146,7 @@ class UnhealthyPatient (Patient):
                 sleep(int(1/self.rate)) 
         except KeyboardInterrupt:
             print("System Failed, reboot")
+            return
         
     def bo_gen(self, q):
         try:
@@ -159,3 +160,4 @@ class UnhealthyPatient (Patient):
                 return
         except KeyboardInterrupt:
             print("System Failed, reboot")
+            return
