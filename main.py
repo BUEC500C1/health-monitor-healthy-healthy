@@ -41,6 +41,7 @@ patient = Patient(1, pulse_q, bp_q, bo_q)
 
 @socketio.on('stop')
 def stop(fakeData):
+    #No need to add error check because this kills the program
     global patient
     patient.end_vitals()
     print("end vitals")
