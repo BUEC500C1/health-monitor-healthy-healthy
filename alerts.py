@@ -45,7 +45,6 @@ def poll_vitals(pulse, bp, bo):
         return alert_string
     except KeyboardInterrupt:
         print("System Failed, reboot")
-        patient.end_vitals()
         return
 
 def sendemail(alertMsg, subject):
@@ -73,5 +72,4 @@ def sendemail(alertMsg, subject):
         server.quit()
     except:
         print("System Failed, reboot")
-        patient.end_vitals()
         return
