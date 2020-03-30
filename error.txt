@@ -1,5 +1,6 @@
+#Sample error handling implemented into the individual python files
+#The error handling made here are adjust for each file
 
-while (True):
     try:
         if (warning_event.is_set()):
         print("WARNING!")
@@ -14,7 +15,6 @@ except KeyboardInterrupt:
     
 #BLOOD OXYGEN
     def critical_blood_oxy(sig, frame):
-    while (True):
     try:
         print("Blood Oxygen is at a critical point")
 
@@ -29,7 +29,7 @@ except KeyboardInterrupt:
 
     def bloodOxygen_module(rate, global_kill):
         
-        while True:
+
         try:
             globals.blood_oxy = random.randint(95, 99)
 
@@ -42,7 +42,7 @@ except KeyboardInterrupt:
 
     def check_blood_oxy():
     
-    while True:
+
     try:
         if(globals.blood_oxy <= 94):
             signal.alarm(.05)
@@ -55,7 +55,7 @@ except KeyboardInterrupt:
 #BP MODULE
 
 def modify_bp(rate, bp, global_kill):
-while True:
+
 try:
     bp += random.uniform(-1,1)
     
@@ -72,7 +72,7 @@ try:
     
 def healthmon(bp, pulse, boxygen):
 
-    while (True):
+
     try:
         print("Blood Pressure: " + string(bp))
         print("Pulse: " + string(pulse))
@@ -87,7 +87,7 @@ def healthmon(bp, pulse, boxygen):
 
 def critical_hr(sig, frame):
     
-    while (True):
+ 
     try:
         print("Heart is critical")
         #call alarm
@@ -101,7 +101,7 @@ def critical_hr(sig, frame):
 
 def pulse_module(rate, global_kill):
     
-        while (True):
+
         try:
             globals.pulse = random.randint(45, 105)
 
@@ -113,7 +113,7 @@ def pulse_module(rate, global_kill):
 
 def check_pulse():
     
-    while (True):
+
     try:
         if(globals.pulse <= 49 or globals.pulse >= 101):
             signal.alarm(.05)
@@ -127,7 +127,7 @@ def check_pulse():
 
 def initilize():
     
-    while (True):
+
     try:
         global pulse
         pulse = 70
