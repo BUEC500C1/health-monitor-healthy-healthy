@@ -1,20 +1,82 @@
 # EC500: Health Monitor Project
+Alex Fatyga, Chris Jung, Jacob Davis, Justin Morgan, Noah Malhi, Varun Malikayil
 
-# Project Architecture
-<p align="center">
-<img src="./updated_architecture.JPG" width="80%" />
-</p>
+# Summary
+The Healthy Healthy Hippos ICU monitor is a web application that runs on the local host. It displays values for the three vitals, both at the top as well as graphs at the bottom. The alerts appear in red between the current value display and the graphs at the bottom.
+
+# Usage Instructions
+1. Clone the repository.
+2. Run main.py.
+3. Access the following url in your browser (localhost) to view the web application: http://127.0.0.1:5000/
+4. Press the 'Start' button.
+5. Press 'End' when you are done.
 
 # Project Roles
-
-* Alex: Health Indicator
+* Alex: Health Indicator web interface
 * Chris: Error Handling
-* Jacob: Alerts, Patient classes
+* Jacob: Alerts, Patient classes, Integrating Architecture
 * Justin: BP Module, Communication With Personal Device
-* Noah: Pulse Module, Timer
-* Varun: Blood Oxygen, AI Module
+* Noah: Pulse Module in the Patient class
+* Varun: Blood Oxygen in Patient class
 
-# Architecture: Patient Class
-Wraps the generation of vitals in a class that pushes vitals values for blood pressure, pulse, and blood oxygen to queues that can be defined in main, and monitored/used by the GUI in a separate thread.
+# Architecture
+## Overview
+<p align="center">
+<img src="./images/updated_architecture.JPG" width="80%" />
+</p>
 
-Note: The UnhealthyPatient class will behave as a child class and have more turbulent behavior
+## Queues
+<p align="left">
+<img src="./images/queue_diagram.png" width="20%" />
+</p>
+
+Three queues to which vitals values can be pushed. The web UI in main pulls vitals from these queues to display them in the UI. The alerts polling portion of main also utilizes the values from these queues to monitor the patient's vitals. 
+
+## Patient Class
+<p align="left">
+<img src="./images/patient_diagram.png" width="20%" />
+</p>
+A class that mimics a patient's vitals, and pushes blood pressure, blood oxygen, and pulse data to the queues that are provided as arguments. One Patient object is instantiated in main to generate vitals to the three queues detailed in the Queues section.
+
+Note: A child class, UnhealthyPatient class, was written to have more turbulent health behavior and vitals fluctuation.
+
+### __Constructor__ (Patient.init(update_rate, pulse_q, bp_q, bo_q))
+The constructor takes the following inputs:
+1. The update rate of the Patient's vitals (how fast the Patient class will push to the queues)
+2. Three vitals queues (see Queues section) to which the Patient will push vitals.
+    * Pulse queue (pulse_q)
+    * Blood pressure queue (bp_q)
+    * Blood Oxygen queue (bo_q)
+The constructor initializes random healthy values for the patient's vitals and initializes the pointers to the three queues so that vitals generation functions can push to them (see Generating functions for more information).
+
+### __Start Vitals function__ (Patient.start_vitals())
+The start vitals function initializes three threads to run each of the three vitals generation functions. The function starts all three of the threads and exits.
+
+### __End Vitals function__ (Patient.end_vitals())
+Sets a flag that stops all of the running vitals threads in the Patient object.
+
+### __Generator Functions__ (Patient.pulse_gen(), Patient.bp_gen(), Patient.bo_gen())
+Three functions that generate vitals and push them to each of the three queues.
+_TODO_: Varun, Justin, Noah: write up how each of the functions work below then delete this line
+* Pulse generator (Patient.pulse_gen()): 
+* Blood pressure generator (Patient.bp_gen()): 
+* Blood oxygen generator (Patient.bo_gen()): 
+
+Each function generates a new vital value every (1/update_rate) seconds.
+
+## Main
+<p align="left">
+<img src="./images/main_diagram.png" width="20%" />
+</p>
+
+Instantiates the three queues (see Queues section) and a Patient object that will push to those queues. On the "Start" button click in the Web interface (see below for more), the Patient's start_vitals function is called and main begins to poll vitals values from the queues. The poll_vitals function in alerts.py checks the values of all three vitals and returns strings for alerts that need to be displayed. This will perform these checks at a preset rate (which matches the update rate of the Patient vitals).
+
+## Web Interface
+<p align="left">
+<img src="./images/ui_top.png" width="40%" />
+</p>
+<p align="left">
+<img src="./images/ui_graphs.png" width="40%" />
+</p>
+
+_TODO_: Alex
