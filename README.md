@@ -23,7 +23,7 @@ The Healthy Healthy Hippos ICU monitor is a web application that runs on the loc
 # Architecture
 ## Overview
 <p align="center">
-<img src="./images/updated_architecture.JPG" width="80%" />
+<img src="./images/updated_architecture.jpg" width="80%" />
 </p>
 
 ## Queues
