@@ -9,7 +9,7 @@ def modify_bp(rate, bp, global_kill):
         
         except KeyboardInterrupt:
             print("System Failed, reboot")
-            break
+            return
 
             # Print statements for testing
             # print("\nBlood pressure is: " + str(bp))

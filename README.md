@@ -4,6 +4,7 @@ Alex Fatyga, Chris Jung, Jacob Davis, Justin Morgan, Noah Malhi, Varun Malikayil
 # Summary
 The Healthy Healthy Hippos ICU monitor is a web application that runs on the local host. It displays values for the three vitals, both at the top as well as graphs at the bottom. The alerts appear in red between the current value display and the graphs at the bottom.
 
+
 # Usage Instructions
 1. Clone the repository.
 2. Run main.py.
@@ -30,7 +31,7 @@ The Healthy Healthy Hippos ICU monitor is a web application that runs on the loc
 <img src="./images/queue_diagram.png" width="20%" />
 </p>
 
-Three queues to which vitals values can be pushed. The web UI in main pulls vitals from these queues to display them in the UI. The alerts polling portion of main also utilizes the values from these queues to monitor the patient's vitals. 
+Three queues to which vitals values can be pushed. The web UI in main pulls vitals from these queues to display them in the UI. The alerts polling portion of main also utilizes the values from these queues to monitor the patient's vitals.
 
 ## Patient Class
 <p align="left">
@@ -58,9 +59,9 @@ Sets a flag that stops all of the running vitals threads in the Patient object.
 ### __Generator Functions__ (Patient.pulse_gen(), Patient.bp_gen(), Patient.bo_gen())
 Three functions that generate vitals and push them to each of the three queues.
 _TODO_: Varun, Justin, Noah: write up how each of the functions work below then delete this line
-* Pulse generator (Patient.pulse_gen()): 
-* Blood pressure generator (Patient.bp_gen()): 
-* Blood oxygen generator (Patient.bo_gen()): 
+* Pulse generator (Patient.pulse_gen()):
+* Blood pressure generator (Patient.bp_gen()):
+* Blood oxygen generator (Patient.bo_gen()):
 
 Each function generates a new vital value every (1/update_rate) seconds.
 
