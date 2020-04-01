@@ -59,11 +59,9 @@ Sets a flag that stops all of the running vitals threads in the Patient object.
 
 ### __Generator Functions__ (Patient.pulse_gen(), Patient.bp_gen(), Patient.bo_gen())
 Three functions that generate vitals and push them to each of the three queues.
-_TODO_: Varun, Justin, Noah: write up how each of the functions work below then delete this line
-* Pulse generator (Patient.pulse_gen()):
-* Blood oxygen generator (Patient.bo_gen()):
-
-Patient.bp_gen() generates a healthy systolic/diastolic blood pressure by shifting the current values by a random uniform value between -1 and 1 (or -4 and 4 for an unhealthy patient) and then rounding to the nearest decimal place. A tuple formed from the systolic/diastolic values is pushed to the bp_q and the new bp attributes for the patient are set.
+* Pulse generator (Patient.pulse_gen()): Generates a healthy pulse by incrementing the current value of the pulse by a random uniform value between -1 and 1, and rounding to the nearest decimal place.
+* Blood oxygen generator (Patient.bo_gen()): Generates a healthy blood oxygen by incrementing the current value by the a random uniform between -1 and 1, and rounding to the nearest decimal place.
+* Blood pressure generator (Patient.bp_gen()): generates a healthy systolic/diastolic blood pressure by shifting the current values by a random uniform value between -1 and 1 (or -4 and 4 for an unhealthy patient) and then rounding to the nearest decimal place. A tuple formed from the systolic/diastolic values is pushed to the bp_q and the new bp attributes for the patient are set.
 
 Each function generates a new vital value every (1/update_rate) seconds.
 
