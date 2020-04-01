@@ -80,4 +80,4 @@ Instantiates the three queues (see Queues section) and a Patient object that wil
 <img src="./images/ui_graphs.png" width="40%" />
 </p>
 
-_TODO_: Alex
+Upon clicking start, the patient will see their vitals update every second and the chart update with new values. Patients also receive an alert on the web app for unusual or irregular vitals. The data points are added to the chart and patients can hover over the chart to see their vitals at various different times. The stop button then stops all activity for the patient
