@@ -48,6 +48,7 @@ The constructor takes the following inputs:
     * Pulse queue (pulse_q)
     * Blood pressure queue (bp_q)
     * Blood Oxygen queue (bo_q)
+
 The constructor initializes random healthy values for the patient's vitals and initializes the pointers to the three queues so that vitals generation functions can push to them (see Generating functions for more information).
 
 ### __Start Vitals function__ (Patient.start_vitals())
